@@ -1,0 +1,56 @@
+{
+  "name": "furytechs-stack",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -b packages",
+    "bumpVersions": "lerna version --no-git-tag-version --include-merged-tags",
+    "clean": "yarn rimraf ./packages/**/dist && yarn rimraf ./packages/**/tsconfig.tsbuildinfo",
+    "purge": "yarn clean && yarn rimraf packages/**/node_modules/ && yarn rimraf node_modules",
+    "reset": "yarn purge && yarn install",
+    "create-schemas": "yarn ts-json-schema-generator -f tsconfig.json --no-type-check -p packages/rest-service/src/validate.integration.schema.ts -o packages/rest-service/src/validate.integration.spec.schema.json",
+    "lint": "eslint . --cache --ext .tsx --ext .ts",
+    "prettier": "prettier --write",
+    "test:debug": "jest --verbose",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsdoc": "^36.0.6",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
+    "jest-junit": "^12.2.0",
+    "lerna": "^4.0.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "tslib": "^2.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "Run Jest tests",
+    "outputDirectory": "./coverage"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "dependencies": {}
+}
