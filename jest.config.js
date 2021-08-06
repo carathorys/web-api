@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/packages/utils',
   ],
   collectCoverage: true,
-  collectCoverageFrom: ['**/*.{ts,tsx,js,jsx}', '!**/node_modules/**', '!**/index.js'],
+  collectCoverageFrom: ['**/*.{ts,tsx,js,jsx}', '!**/node_modules/**', '!**/index.{js,ts}'],
   coverageReporters: ['text', 'json', 'html', 'cobertura'],
   reporters: ['default', 'jest-junit']
 };
