@@ -1,0 +1,22 @@
+{
+  "name": "@furytechs/utils",
+  "version": "1.0.0",
+  "description": "Utils which are commonly used",
+  "main": "dist/index.js",
+  "scripts": {},
+  "files": [
+    "dist",
+    "src"
+  ],
+  "author": "balazs.gallay@furytechs.com",
+  "license": "GPL-2.0",
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.10"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "semaphore-async-await": "^1.5.1",
+    "tslib": "^2.3.0"
+  }
+}
