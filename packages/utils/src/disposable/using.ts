@@ -1,3 +1,4 @@
+import { DisposeError } from './errors';
 import { IDisposable } from './interfaces';
 
 /**
@@ -7,10 +8,18 @@ import { IDisposable } from './interfaces';
  * @param callback The callback that will be executed synchrounously before the resource will be disposed
  * @returns the value that will be returned by the callback method
  */
-export const using = <T extends IDisposable, TReturns>(resource: T, callback: (r: T) => TReturns) => {
+export const using = async <T extends any, TReturns>(
+  resource: T,
+  callback: (r: T) => TReturns | Promise<TReturns>,
+) => {
+  if ((resource as IDisposable).dispose === undefined) {
+    throw new DisposeError(
+      'The object is not an IDisposable instance, neither directly or through `Disposable` decorator',
+    );
+  }
   try {
-    return callback(resource);
+    return await callback(resource);
   } finally {
-    resource.dispose();
+    await (resource as IDisposable).dispose();
   }
 };

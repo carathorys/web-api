@@ -7,18 +7,23 @@ export const Disposable = (parameters?: DisposableDecoratorParameters) => <T ext
     __isDisposing = false;
     __isDisposed = false;
 
-    dispose() {
-      if (this.__isDisposing === true) throw new DisposeError('The object has already disposed!');
+    async dispose() {
+      if (this.__isDisposing === true) throw new DisposeError('The object is already disposing!');
       this.__isDisposing = true;
       try {
-        if (this.__isDisposed === true) throw new ObjectDisposedError('The object is already disposing!');
+        if (this.__isDisposed === true) throw new ObjectDisposedError('The object has already disposed!');
 
         if (typeof super['dispose'] === 'function') {
-          super.dispose();
+          await super.dispose();
         }
-         if (parameters?.recursive === true) {
-           // TODO: Implement recursive dispose
-         }
+        if (parameters?.recursive === true) {
+          const keys = Object.keys(this);
+          for(const key of keys) {
+            if (typeof this[key] === 'object' && typeof this[key]['dispose'] === 'function') {
+              await this[key].dispose();
+            }
+          }
+        }
       } finally {
         this.__isDisposed = true;
         this.__isDisposing = false;
