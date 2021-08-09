@@ -19,7 +19,7 @@ export type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) ex
   : B;
 
 // Type that defines a constructable class
-export type Constructrable<T> = (new (...args: any[]) => object) & (new (...args: any[]) => T);
+export type Constructable<T> = (new (...args: any[]) => object) & (new (...args: any[]) => T);
 
 // Excludes readonly fields of type T
 export type WritableKeys<T> = {

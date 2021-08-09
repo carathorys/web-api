@@ -1,6 +1,6 @@
 import { DisposeError, ObjectDisposedError } from '../errors';
 import { IDisposable } from '../interfaces';
-import { Disposable } from './disposable.decorator';
+import { Disposable } from './disposable-decorator';
 
 export class MockDisposable implements IDisposable {
   private disposed = false;

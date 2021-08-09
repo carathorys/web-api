@@ -4,7 +4,7 @@ import {
   MockDecoratedDisposable,
   MockNotDisposable,
   validateResource,
-} from './decorators/disposable.decorator.spec';
+} from './decorators/disposable-decorator.spec';
 import { DisposeError } from './errors';
 
 export const usingTests = describe('Using tests', () => {

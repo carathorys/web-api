@@ -1,1 +1,1 @@
-export * from './disposable.decorator';
+export * from './disposable-decorator';
