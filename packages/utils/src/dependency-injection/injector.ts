@@ -6,12 +6,7 @@ import { InjectorParameters, InjectableParameters, ServiceLifetime } from './par
 
 @Disposable({ recursive: true })
 export class Injector implements IDisposable {
-  async dispose() {
-    console.log('Disposing Injector instance');
-  }
-
   constructor(public readonly parameters?: InjectorParameters) {
-    console.log('parameters:', this.parameters);
   }
 
   /**
@@ -62,7 +57,7 @@ export class Injector implements IDisposable {
             (m.meta.options.lifetime === ServiceLifetime.Scoped ||
               m.meta.options.lifetime === ServiceLifetime.Transient),
         )
-        .map((i) => i.meta && `${i.dep.name}:${i.meta.options.lifetime}`);
+        .map((i) => i.meta && `${i.dep.name}:${ServiceLifetime[i.meta.options.lifetime]}`);
       if (invalidDeps.length) {
         throw Error(
           `Injector error: Singleton type '${ctor.name}' depends on non-singleton injectables: ${invalidDeps.join(
@@ -74,7 +69,7 @@ export class Injector implements IDisposable {
       const invalidDeps = meta.dependencies
         .map((dep) => ({ meta: Injector.meta.get(dep), dep }))
         .filter((m) => m.meta && m.meta.options.lifetime === ServiceLifetime.Transient)
-        .map((i) => i.meta && `${i.dep.name}:${i.meta.options.lifetime}`);
+        .map((i) => i.meta && `${i.dep.name}:${ServiceLifetime[i.meta.options.lifetime]}`);
       if (invalidDeps.length) {
         throw Error(
           `Injector error: Scoped type '${ctor.name}' depends on transient injectables: ${invalidDeps.join(',')}`,
@@ -134,5 +129,26 @@ export class Injector implements IDisposable {
    */
   public createChild(options?: Partial<Injector['parameters']>) {
     return new Injector({ ...options, parent: this });
+  }
+  
+  /**
+   * Disposes the Injector object and all its disposable injectables
+   */
+   public async dispose() {
+    const singletons = Array.from(this.cachedSingletons.entries()).map((e) => e[1])
+    const disposeRequests = singletons
+      .filter((s) => s !== this)
+      .map(async (s) => {
+        if (s.dispose) {
+          await s.dispose()
+        }
+      })
+    const result = await Promise.allSettled(disposeRequests)
+    const fails = result.filter((r) => r.status === 'rejected')
+    if (fails && fails.length) {
+      console.warn(`There was an error during disposing '${fails.length}' global disposable objects`, fails)
+    }
+
+    this.cachedSingletons.clear()
   }
 }

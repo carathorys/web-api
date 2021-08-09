@@ -117,22 +117,22 @@ export const usingTests = describe('Injector', () => {
     })
   })
 
-  it('Should dispose cached entries on dispose and tolerate non-disposable ones', async () => {
+  it('Should dispose cached entries on dispose and tolerate non-disposable ones', (done) => {
     class TestDisposable implements IDisposable {
       public dispose() {
-        
+        done()
       }
     }
     class TestInstance {}
 
-    await using(new Injector(), async (i) => {
+    using(new Injector(), async (i) => {
       i.setExplicitInstance(new TestDisposable())
       i.setExplicitInstance(new TestInstance())
     })
   })
 
-  it('Remove should remove an entity from the cached singletons list', () => {
-    using(new Injector(), (i) => {
+  it('Remove should remove an entity from the cached singletons list', async () => {
+    await using(new Injector(), (i) => {
       i.setExplicitInstance({}, Object)
       i.remove(Object)
       // tslint:disable-next-line: no-string-literal
@@ -140,22 +140,22 @@ export const usingTests = describe('Injector', () => {
     })
   })
 
-  it('Requesting an Injector instance should return self', () => {
-    using(new Injector(), (i) => {
+  it('Requesting an Injector instance should return self', async () => {
+    await using(new Injector(), (i) => {
       expect(i.getInstance(Injector)).toBe(i)
     })
   })
 
-  it('Requesting an undecorated instance should throw an error', () => {
+  it('Requesting an undecorated instance should throw an error', async () => {
     class UndecoratedTestClass {}
-    using(new Injector(), (i) => {
+    await using(new Injector(), (i) => {
       expect(() => i.getInstance(UndecoratedTestClass, [Injector])).toThrowError(
-        `No metadata found for 'UndecoratedTestClass'. Dependencies: Injector. Be sure that it's decorated with '@Injectable()' or added explicitly with SetInstance()`,
+        `No metadata found for 'UndecoratedTestClass'. Dependencies: DisposableClass. Be sure that it's decorated with '@Injectable()' or added explicitly with SetInstance()`,
       )
     })
   })
 
-  it('Singleton with transient dependencies should throw an error', () => {
+  it('Singleton with transient dependencies should throw an error', async () => {
     @Injectable({ lifetime: ServiceLifetime.Transient})
     class Trs1 {}
 
@@ -164,14 +164,14 @@ export const usingTests = describe('Injector', () => {
       constructor(public lt: Trs1) {}
     }
 
-    using(new Injector(), (i) => {
+    await using(new Injector(), (i) => {
       expect(() => i.getInstance(St1)).toThrowError(
-        `Injector error: Singleton type 'St1' depends on non-singleton injectables: Trs1:0`,
+        `Injector error: Singleton type 'St1' depends on non-singleton injectables: Trs1:Transient`,
       )
     })
   })
 
-  it('Singleton with transient dependencies should throw an error', () => {
+  it('Singleton with transient dependencies should throw an error', async () => {
     @Injectable({ lifetime: ServiceLifetime.Scoped})
     class Sc1 {}
 
@@ -180,9 +180,9 @@ export const usingTests = describe('Injector', () => {
       constructor(public sc: Sc1) {}
     }
 
-    using(new Injector(), (i) => {
+    await using(new Injector(), (i) => {
       expect(() => i.getInstance(St2)).toThrowError(
-        `Injector error: Singleton type 'St2' depends on non-singleton injectables: Sc1:scoped`,
+        `Injector error: Singleton type 'St2' depends on non-singleton injectables: Sc1:Scoped`,
       )
     })
   })
@@ -198,7 +198,7 @@ export const usingTests = describe('Injector', () => {
 
     using(new Injector(), (i) => {
       expect(() => i.getInstance(Sc2)).toThrowError(
-        `Injector error: Scoped type 'Sc2' depends on transient injectables: Tr2:transient`,
+        `Injector error: Scoped type 'Sc2' depends on transient injectables: Tr2:Transient`,
       )
     })
   })
