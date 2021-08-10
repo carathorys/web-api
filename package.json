@@ -10,9 +10,8 @@
     "build": "tsc -b packages",
     "bumpVersions": "lerna version --no-git-tag-version --include-merged-tags",
     "clean": "yarn rimraf ./packages/**/dist && yarn rimraf ./packages/**/tsconfig.tsbuildinfo",
-    "purge": "yarn clean && yarn rimraf packages/**/node_modules/ && yarn rimraf node_modules",
+    "purge": "yarn clean && yarn rimraf packages/**/node_modules/ && yarn rimraf coverage && yarn rimraf node_modules ",
     "reset": "yarn purge && yarn install",
-    "create-schemas": "yarn ts-json-schema-generator -f tsconfig.json --no-type-check -p packages/rest-service/src/validate.integration.schema.ts -o packages/rest-service/src/validate.integration.spec.schema.json",
     "lint": "eslint . --cache --ext .tsx --ext .ts",
     "prettier": "prettier --write",
     "test:debug": "jest --verbose",
@@ -37,6 +36,7 @@
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.4",
+    "ts-node": "^10.2.0",
     "tslib": "^2.3.0",
     "typescript": "^4.3.5"
   },

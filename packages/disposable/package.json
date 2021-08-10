@@ -1,0 +1,22 @@
+{
+  "name": "@furytechs/disposable",
+  "version": "1.0.0",
+  "description": "Dependency injection",
+  "main": "dist/index.js",
+  "author": "balazs.gallay@furytechs.com",
+  "license": "GPL-2.0",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.13"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.3.0"
+  },
+  "typings": "./dist/index.d.ts",
+  "private": true
+}

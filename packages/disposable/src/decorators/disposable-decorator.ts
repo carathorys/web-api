@@ -2,7 +2,7 @@ import { DisposeError, ObjectDisposedError } from '../errors';
 import { IDisposable } from '../interfaces';
 import { DisposableDecoratorParameters } from './disposable-decorator.parameters';
 
-export const Disposable = (parameters?: DisposableDecoratorParameters) => <T extends { new (...args: any[]): any }>(Base: T) => {
+export const Disposable = (parameters?: DisposableDecoratorParameters) => <T extends { new(...args: any[]): any }>(Base: T) => {
   class DisposableClass extends Base implements IDisposable {
     __isDisposing = false;
     __isDisposed = false;
@@ -18,7 +18,7 @@ export const Disposable = (parameters?: DisposableDecoratorParameters) => <T ext
         }
         if (parameters?.recursive === true) {
           const keys = Object.keys(this);
-          for(const key of keys) {
+          for (const key of keys) {
             if (typeof this[key] === 'object' && typeof this[key]['dispose'] === 'function') {
               await this[key].dispose();
             }

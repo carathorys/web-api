@@ -1,6 +1,5 @@
-import { IDisposable } from '../disposable';
-import { Disposable } from '../disposable/decorators';
-import { Constructable } from '../helpers';
+import { Disposable, IDisposable } from '@furytechs/disposable';
+import { Constructable } from '@furytechs/utils'
 
 import { InjectorParameters, InjectableParameters, ServiceLifetime } from './parameters';
 
@@ -130,11 +129,11 @@ export class Injector implements IDisposable {
   public createChild(options?: Partial<Injector['parameters']>) {
     return new Injector({ ...options, parent: this });
   }
-  
+
   /**
    * Disposes the Injector object and all its disposable injectables
    */
-   public async dispose() {
+  public async dispose() {
     const singletons = Array.from(this.cachedSingletons.entries()).map((e) => e[1])
     const disposeRequests = singletons
       .filter((s) => s !== this)

@@ -1,12 +1,11 @@
-import { IDisposable } from '../disposable';
-import { using } from '../disposable/using';
+import { using, IDisposable } from '@furytechs/disposable';
 import { Injectable, ServiceLifetime } from './decorators';
 import { Injector } from './injector';
 
 export const usingTests = describe('Injector', () => {
   it('dispose', async () => {
     let spy: jest.SpyInstance<Promise<void>, []> | undefined = undefined;
-    await using(new Injector(), async (injector) => {
+    await using(new Injector(), async (injector: Injector) => {
       spy = jest.spyOn(injector, 'dispose');
     });
     expect(spy).toBeCalled();
@@ -104,11 +103,11 @@ export const usingTests = describe('Injector', () => {
     @Injectable()
     class InstanceClass {
       constructor(public injected2: Injected2) {
-        /** */
       }
     }
     expect(i.getInstance(InstanceClass)).toBeInstanceOf(InstanceClass)
     expect(i.getInstance(InstanceClass).injected2.injected1).toBeInstanceOf(Injected1)
+    expect(i.getInstance(InstanceClass))
   })
 
   it('Should be disposed', async () => {

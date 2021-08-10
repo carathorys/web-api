@@ -1,7 +1,7 @@
 import 'reflect-metadata';
+import { Constructable } from '@furytechs/utils';
 
 import { Injector } from '../injector';
-import { Constructable } from '../../helpers';
 import { InjectableParameters, ServiceLifetime } from '../parameters';
 
 export interface InjectableMetadata {

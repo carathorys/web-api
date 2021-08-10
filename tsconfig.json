@@ -1,26 +1,38 @@
 {
-    "compilerOptions": {
-      "pretty": true,
-      "target": "ES2020",
-      "module": "commonjs",
-      "declaration": true,
-      "sourceMap": true,
-      "strict": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
-      "strictFunctionTypes": true,
-      "noImplicitThis": true,
-      "alwaysStrict": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "forceConsistentCasingInFileNames": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "declarationMap": true,
-      "importHelpers": true,
-      "esModuleInterop": true,
-      "isolatedModules": true,
-      "skipLibCheck": true,
-      "lib": ["ES2020"]
+  "compilerOptions": {
+    "pretty": true,
+    "target": "ES2021",
+    "module": "commonjs",
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "declarationMap": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES2021"
+    ],
+    "resolveJsonModule": true,
+    "types": [
+      "jest"
+    ],
+    "paths": {
+      "@furytechs/utils": ["packages/utils/src"],
+      "@furytechs/dependency-injection": ["packages/dependency-injection/src"],
+      "@furytechs/disposable": ["packages/disposable/src"]
+
     }
   }
+}
