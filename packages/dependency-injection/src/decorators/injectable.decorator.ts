@@ -3,11 +3,7 @@ import { Constructable } from '@furytechs/utils';
 
 import { Injector } from '../injector';
 import { InjectableParameters, ServiceLifetime } from '../parameters';
-
-export interface InjectableMetadata {
-  dependencies: Constructable<unknown>[];
-  options: InjectableParameters;
-}
+import { InjectableMetadata } from '../metadata';
 
 export const DefaultInjectableParameters: InjectableParameters = {
   lifetime: ServiceLifetime.Transient,
