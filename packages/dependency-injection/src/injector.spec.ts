@@ -1,4 +1,4 @@
-import { using, IDisposable } from '@furytechs/disposable';
+import { using, IDisposable, Disposable } from '@furytechs/disposable';
 import { Injectable } from './decorators';
 import { ServiceLifetime } from './parameters';
 import { Injector } from './injector';
@@ -149,6 +149,47 @@ export const usingTests = describe('Injector', () => {
     })).rejects.toThrow(injectorError);;
     expect(disposeSpy).rejects.toThrow(instanceError);
   });
+
+
+  it('On dispose error it should write warn logs about the error itself.', async () => {
+    const injectorError = "There was an error during disposing '1' global disposable object(s)";
+    const instanceError = "Something very bad happened during my disposal...";
+    class TestDisposable implements IDisposable {
+      public dispose() {
+        throw new Error(instanceError);
+      }
+    }
+    class TestInstance {}
+
+    const testDisposable = new TestDisposable()
+
+    const disposeSpy = jest.spyOn(testDisposable, 'dispose')
+    expect(using(new Injector(), async (i) => {
+      i.setExplicitInstance(testDisposable);
+      i.setExplicitInstance(new TestInstance());
+    })).rejects.toThrow(injectorError);;
+    expect(disposeSpy).toThrow(instanceError);
+  });
+
+  it('On dispose error it should write warn logs about the error itself.', async () => {
+    const injectorError = "There was an error during disposing '1' global disposable object(s)";
+    const instanceError = "Something very bad happened during my disposal...";
+    @Disposable()
+    class TestDisposable {
+      dispose() {
+        throw new Error(instanceError);
+      }
+    }
+    class TestInstance {}
+
+    const testDisposable = new TestDisposable()
+
+    expect(using(new Injector(), async (i) => {
+      i.setExplicitInstance(testDisposable);
+      i.setExplicitInstance(new TestInstance());
+    })).rejects.toThrow(injectorError);;
+  });
+
 
   it('Remove should remove an entity from the cached singletons list', async () => {
     await using(new Injector(), (i) => {
