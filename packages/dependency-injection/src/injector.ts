@@ -1,4 +1,4 @@
-import { Disposable, IDisposable } from '@furytechs/disposable';
+import { Disposable, DisposeError, IDisposable } from '@furytechs/disposable';
 import { Constructable } from '@furytechs/utils'
 
 import { InjectorParameters, InjectableParameters, ServiceLifetime } from './parameters';
@@ -145,7 +145,7 @@ export class Injector implements IDisposable {
     const result = await Promise.allSettled(disposeRequests)
     const fails = result.filter((r) => r.status === 'rejected')
     if (fails && fails.length) {
-      console.warn(`There was an error during disposing '${fails.length}' global disposable objects`, fails)
+      throw new DisposeError(`There was an error during disposing '${fails.length}' global disposable object(s)`, fails)
     }
 
     this.cachedSingletons.clear()

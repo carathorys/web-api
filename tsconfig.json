@@ -29,10 +29,7 @@
       "jest"
     ],
     "paths": {
-      "@furytechs/utils": ["packages/utils/src"],
-      "@furytechs/dependency-injection": ["packages/dependency-injection/src"],
-      "@furytechs/disposable": ["packages/disposable/src"]
-
+      "@furytechs/*": ["packages/*/src"]
     }
   }
 }

@@ -1,3 +1,3 @@
-export * from './injectable.parameters';
-export * from './injector.parameters';
-export * from './service-lifetime';
+export * from './injectable-parameters.model';
+export * from './injector-parameters.model';
+export * from './service-lifetime.enum';
