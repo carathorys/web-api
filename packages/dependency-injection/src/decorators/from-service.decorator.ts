@@ -8,7 +8,8 @@ import { Constructable } from '@furytechs/utils';
 const FromServicesMetadataKey = Symbol('FromServicesMetadataKey');
 
 export const Inject =
-  (parameters?: InjectParameters) => <T extends Constructable<any>>(target: T, propertyKey: string | symbol, parameterIndex: number) => {
+  (parameters?: InjectParameters) =>
+  <T extends Constructable<any>>(target: T, propertyKey: string | symbol, parameterIndex: number) => {
     let existingRequiredParameters: InjectMetadata[] =
       Reflect.getOwnMetadata(FromServicesMetadataKey, target, propertyKey) || [];
 

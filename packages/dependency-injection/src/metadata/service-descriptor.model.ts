@@ -1,63 +1,55 @@
+import { IDisposable } from '@furytechs/disposable';
 import { Constructable } from '@furytechs/utils';
-import { IServiceProvider } from '../interfaces';
-import { ServiceLifetime } from '../parameters';
+import { ServiceDescriptorError } from '../errors';
+import { ImplementationFactory, ServiceDecoratorParameters, ServiceLifetime } from '../parameters';
 
-type ImplementationFactory<T> = (provider: IServiceProvider) => T;
-type ConstructorParameters<T> = {
-  lifetime: ServiceLifetime;
-  serviceType: Constructable<T>;
-  implementationType?: Constructable<T>;
-  implementationInstance?: T;
-  implementationFactory?: ImplementationFactory<T>;
-};
-
-export class ServiceDescriptor {
+export class ServiceDescriptor<T> {
   public readonly serviceLifetime: ServiceLifetime;
-  public readonly serviceType: Constructable<unknown>;
-  public readonly implementationType?: Constructable<unknown>;
-  public readonly implementationInstance?: unknown;
-  public readonly implementationFactory?: ImplementationFactory<unknown>;
-
+  public readonly serviceType?: Symbol;
+  public readonly implementationType?: Constructable<T>;
+  public readonly implementationInstance?: T;
+  public readonly implementationFactory?: ImplementationFactory<T>;
+  public readonly provideIn?: Constructable<unknown> | 'root' | 'platform' | 'any';
   /**
    *
    */
   constructor({
     lifetime,
     serviceType,
+    provideIn,
     implementationFactory,
     implementationInstance,
     implementationType,
-  }: ConstructorParameters<unknown>) {
+  }: ServiceDecoratorParameters<T>) {
+    if (!lifetime) throw new Error('No `lifetime` (required) was provided!');
     this.serviceLifetime = lifetime;
-    this.serviceType = serviceType;
+
+    if (this.serviceLifetime === ServiceLifetime.Scoped && !ServiceDescriptor.IsDisposable(provideIn)) {
+      throw new ServiceDescriptorError('Scoped services can be injected into disposable objects only!');
+    }
     this.implementationType = implementationType;
     this.implementationInstance = implementationInstance;
     this.implementationFactory = implementationFactory;
+
+    this.serviceType = serviceType || Symbol(this.getImplementationType()?.name);
+
+    if (this.serviceType === undefined) {
+      throw new ServiceDescriptorError("Can't determine the service type!");
+    }
   }
 
-  public getImplementationType(): Constructable<object> | undefined {
-    if (this.implementationType) return this.implementationType;
-    else if (this.implementationInstance) return (this.implementationInstance as any)['constructor'];
-    else if (this.implementationFactory) return this.implementationFactory.prototype;
+  public static IsDisposable(object: any): object is IDisposable {
+    return object && typeof object['dispose'] === 'function';
+  }
+
+  public getImplementationType(): Constructable<T> | undefined {
+    if (this.implementationType) {
+      return this.implementationType;
+    } else if (this.implementationInstance) {
+      return (this.implementationInstance as any)['constructor'];
+    } else if (this.implementationFactory !== undefined) {
+      return ((typeof (false as true) && this.implementationFactory(undefined as any)) as any)['constructor'];
+    }
     return undefined;
-  }
-
-  /**
-   * @description Creates the service descriptor from a singleton instance
-   * @param serviceType ServiceType to use
-   * @param implementationInstance Instance to register
-   * @returns {ServiceDescriptor} service descriptor
-   */
-  public static Singleton<T>(params: Omit<ConstructorParameters<T>, 'lifetime'>): ServiceDescriptor {
-    const { serviceType, implementationInstance } = params;
-    if (serviceType == null) {
-      throw new Error('`serviceType` needs to be provided');
-    }
-
-    if (implementationInstance == null) {
-      throw new Error('`implementationInstance` needs to be provided');
-    }
-
-    return new ServiceDescriptor({ serviceType, implementationInstance, lifetime: ServiceLifetime.Singleton });
   }
 }
