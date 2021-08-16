@@ -1,0 +1,4 @@
+{
+  "name": "FuryTechs WebAPI",
+	"extensions": ["mhutchie.git-graph", "eamodio.gitlens", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+}
